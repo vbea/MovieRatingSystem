@@ -1,0 +1,58 @@
+﻿@model MovieModel.Users
+@{
+    ViewBag.Title = "注册";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <script type="text/javascript">
+        function check() {
+            var pass1 = document.getElementById("password");
+            var pass2 = document.getElementById("password2");
+            if (pass1.value != pass2.value)
+                pass2.setCustomValidity("两次输入的密码不正确");
+            else
+                pass2.setCustomValidity("");
+        }
+    </script>
+}
+@using (Html.BeginForm("Sign", "Home", FormMethod.Post))
+{
+    <div class="mdui-card mdui-col-md-5" style="margin:20px auto; float:none; padding:8px 16px;">
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">用户名</label>
+            <input name="UserName" class="mdui-textfield-input" type="text" required="required" value="@Model.UserName" />
+        </div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">密码</label>
+            <input id="password" name="Password" class="mdui-textfield-input" type="password" required="required" />
+        </div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">确认密码</label>
+            <input id="password2" name="password2" class="mdui-textfield-input" type="password" required="required" onchange="check()" />
+        </div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">邮箱</label>
+            <input name="Email" class="mdui-textfield-input" type="email" required="required" value="@Model.Email" />
+        </div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">昵称</label>
+            <input name="Nickname" class="mdui-textfield-input" type="text" required="required" value="@Model.Nickname" />
+        </div>
+        <div class="mdui-textfield">
+            <label style="padding-right:16px;">性别</label>
+            <label class="mdui-radio">
+                <input type="radio" name="Gender" value="False" checked="checked"/>
+                <i class="mdui-radio-icon"></i>男
+            </label>&nbsp;&nbsp;
+            <label class="mdui-radio">
+                <input type="radio" name="Gender" value="True" />
+                <i class="mdui-radio-icon"></i>女
+            </label>
+        </div>
+        <span class="mdui-textfield-error" style="visibility:visible;">@ViewBag.Message</span>
+        <p>
+            <button class="mdui-btn mdui-color-theme-accent mdui-ripple" type="submit">注册</button>
+        </p>
+    </div>
+}
+

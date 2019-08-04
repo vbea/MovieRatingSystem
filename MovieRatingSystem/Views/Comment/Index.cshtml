@@ -1,0 +1,82 @@
+﻿@model IEnumerable<MovieRatingSystem.Models.Comments>
+@using Vbes.WebControls.Mvc
+@{
+    ViewBag.Title = "评论管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="mdui-table-fluid" style="margin:20px auto;">
+    <table class="mdui-table mdui-table-hoverable mdui-typo">
+        <thead>
+            <tr>
+                <th>
+                    电影
+                </th>
+                <th>
+                    用户
+                </th>
+                <th>
+                    分数
+                </th>
+                <th>
+                    评论
+                </th>
+                <th>
+                    赞
+                </th>
+                <th>
+                    评论时间
+                </th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr style="white-space:nowrap;">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Movie)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Score)
+                </td>
+                <td style="max-width:80px; overflow:hidden;" mdui-tooltip="{content: '@item.Comment'}">
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Praise)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dated)
+                </td>
+                <td>
+                    <a href="javascript:void(0);" onclick="deleteDialog(@item.ID)">删除</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="mdui-typo" style="padding:8px 16px;">
+    @Html.Pager((IPagedList)Model, new PagerOptions
+    {
+        PageIndexParameterName = "page",
+        ShowPageIndexBox = false,
+        ShowFirstLast = true,
+        ShowPrevNext = false
+    })
+    </div>
+
+</div>
+<script type="text/javascript">
+    function deleteDialog(id) {
+        mdui.dialog({
+            title: '删除评论',
+            content: '您确定要删除吗？',
+            buttons: [{text: '取消'},{text: '删除',
+                  onClick: function (inst) {
+                      location.href='/Comment/Delete/'+id
+                  }
+              }]
+        });
+    }
+</script>

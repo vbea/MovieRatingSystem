@@ -1,0 +1,35 @@
+﻿@model MovieModel.Poster
+
+@{
+    ViewBag.Title = "查看海报";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="mdui-card mdui-col-md-5" style="margin:20px auto; padding:8px 16px;">
+    <div class="mdui-textfield">
+        <label class="mdui-text-color-theme-accent">标题</label>
+        <label class="mdui-col">@Model.Title</label>
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-text-color-theme-accent">海报</label>
+        <img src="@Model.Picture"/>
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-text-color-theme-accent">链接</label>
+        <label class="mdui-col mdui-typo"><a href="@Model.Url">@Model.Url</a></label>
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-text-color-theme-accent">启用</label>
+        <label class="mdui-col">@Html.DisplayFor(model => model.Valid)</label>
+    </div>    
+    <div class="mdui-textfield">
+        <label class="mdui-text-color-theme-accent">更新时间</label>
+        <label class="mdui-col">@Model.CreateOn</label>
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-text-color-theme-accent">操作者</label>
+        <label class="mdui-col">@Model.CreateBy</label>
+    </div>
+    <p>
+        <button type="button" class="mdui-btn mdui-color-theme-accent mdui-ripple" onclick="javascript: location.href='/Poster';">返回</button>
+    </p>
+</div>

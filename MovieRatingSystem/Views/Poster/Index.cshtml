@@ -1,0 +1,73 @@
+﻿@model IEnumerable<MovieModel.Poster>
+@using Vbes.WebControls.Mvc
+@{
+    ViewBag.Title = "海报管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="mdui-table-fluid" style="margin:20px auto;">
+    <table class="mdui-table mdui-table-hoverable mdui-typo">
+        <thead>
+            <tr>
+                <th>
+                    标题
+                </th>
+                <th>
+                    链接
+                </th>
+                <th>
+                    启用状态
+                </th>
+                <th>
+                    创建时间
+                </th>
+                <th>
+                    创建者
+                </th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr style="white-space:nowrap;">
+                <td>@Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Url)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Valid)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.CreateOn)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.CreateBy)
+                </td>
+                <td style="white-space:nowrap;" valign="middle">
+                    @Html.ActionLink("查看", "Details", new { id = item.ID }) &nbsp;
+                    @Html.ActionLink("编辑", "Edit", new { id = item.ID }) &nbsp;
+                    <a href="javascript:void(0);" onclick="deleteDialog(@item.ID)">删除</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="mdui-typo" style="padding:8px 16px;">
+        @Html.Pager((IPagedList)Model, new PagerOptions
+        {
+            PageIndexParameterName = "page",
+            ShowPageIndexBox = false,
+            ShowFirstLast = true,
+            ShowPrevNext = false
+        })
+    </div>
+</div>
+<button class="mdui-fab mdui-color-theme-accent mdui-ripple mdui-fab-fixed" onclick="javascript:location.href='/Poster/Create'"><i class="mdui-icon material-icons">&#xe145;</i></button>
+<script type="text/javascript">
+    function deleteDialog(id) {
+        mdui.dialog({
+            title: '删除海报',
+            content: '您确定要删除吗？',
+            buttons: [{text: '取消'},{text: '删除',
+                  onClick: function (inst) {
+                      location.href='/Poster/Delete/'+id
+                  }
+              }]
+        });
+    }
+</script>

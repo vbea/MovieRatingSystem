@@ -1,0 +1,181 @@
+﻿@model MovieRatingSystem.Models.MovieInfo
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <link href="/css/jquery.raty.css" rel="stylesheet" />
+    <script src="/scripts/jquery.raty.js"></script>
+    <style type="text/css">
+        .table {
+            margin-top: 10px;
+        }
+
+            .table tr td {
+                padding: 6px 5px;
+            }
+
+        #rating {
+            padding-top: 5px;
+            padding-left: 10px;
+        }
+
+        image {
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $('.rating').raty({
+                readOnly: true,
+                score: function () {
+                    return $(this).attr('data-score');
+                }
+            });
+        });
+        function showImage(url) {
+            mdui.dialog({
+                content: '<img src="' + url + '" style="width:100%;" mdui-dialog-close/>',
+                cssClass: 'still_box'
+            });
+        }
+        function Praise(obj,id) {
+            var count = $(obj).next();
+            $.get("/Comment/Praise",{ id: id,date:new Date()}, function(result){
+                if (result == '-1')
+                    location.href = '/Login';
+                else {
+                    count.text(result);
+                    $(obj).attr("onclick", "");
+                    $(obj).addClass("mdui-text-color-theme-accent");
+                }
+            });
+        }
+    </script>
+}
+<div style="padding:20px 0px; width:100%;">
+    <div style="width:20%; float:left; padding-right:10px; padding-left:20px; text-align:center;">
+        <img src="@Model.Movie.Cover" style="width:100%;" onclick="showImage('@Model.Movie.Cover')"/>
+    </div>
+    <div class="mdui-container">
+        <span class="mdui-text-color-theme-accent" style="font-size:20pt;">@Model.Name</span>
+        <span class="rating" data-score="@(Model.Movie.Averige / 2)"></span> @Model.Movie.Averige 分
+        <table class="table">
+            <tr>
+                <td>导演：</td>
+                <td>@Model.Movie.Director</td>
+            </tr>
+            <tr>
+                <td>编剧：</td>
+                <td>@Model.Movie.Writers</td>
+            </tr>
+            <tr>
+                <td valign="top">主演：</td>
+                <td>@Model.Movie.Actor</td>
+            </tr>
+            <tr>
+                <td>类型：</td>
+                <td>@Model.Categories</td>
+            </tr>
+            <tr>
+                <td style="white-space:nowrap;">国家/地区：</td>
+                <td>@Model.Movie.Area</td>
+            </tr>
+            <tr>
+                <td>语言：</td>
+                <td>@Model.Movie.Languages</td>
+            </tr>
+            <tr>
+                <td>上映日期：</td>
+                <td>@Model.Movie.Show</td>
+            </tr>
+            <tr>
+                <td>片长：</td>
+                <td>@Model.Movie.Long</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="mdui-divider"></div>
+<div style="padding:5px 20px;">
+    <p class="mdui-text-color-theme-accent">@Html.Raw(Model.Movie.Name + "的剧情简介")</p>
+    @Model.Movie.Abstract
+    <p class="mdui-text-color-theme-accent">@Html.Raw(Model.Movie.Name + "的剧照")</p>
+    <div class="mdui-row-xs-4 mdui-row-sm-4 mdui-row-md-5 mdui-row-lg-6 mdui-row-xl-7 mdui-grid-list">
+        @if (!string.IsNullOrEmpty(Model.Movie.Stills0))
+        {<div class="mdui-col">
+            <div class="mdui-grid-tile">
+                <img src="@Model.Movie.Stills0" onclick="showImage('@Model.Movie.Stills0')" />
+            </div>
+        </div>}
+        @if (!string.IsNullOrEmpty(Model.Movie.Stills1))
+        {<div class="mdui-col">
+            <div class="mdui-grid-tile">
+                <img src="@Model.Movie.Stills1" onclick="showImage('@Model.Movie.Stills1')" />
+            </div>
+        </div>}
+        @if (!string.IsNullOrEmpty(Model.Movie.Stills2))
+        {<div class="mdui-col">
+            <div class="mdui-grid-tile">
+                <img src="@Model.Movie.Stills2" onclick="showImage('@Model.Movie.Stills2')" />
+            </div>
+        </div>}
+        @if (!string.IsNullOrEmpty(Model.Movie.Stills3))
+        {<div class="mdui-col">
+            <div class="mdui-grid-tile">
+                <img src="@Model.Movie.Stills3" onclick="showImage('@Model.Movie.Stills3')" />
+            </div>
+        </div>}
+        @if (!string.IsNullOrEmpty(Model.Movie.Stills4))
+        {<div class="mdui-col">
+            <div class="mdui-grid-tile">
+                <img src="@Model.Movie.Stills4" onclick="showImage('@Model.Movie.Stills4')" />
+            </div>
+        </div>}
+    </div>
+    <p class="mdui-text-color-theme-accent">
+        @Html.Raw(Model.Movie.Name + "的短评")
+        <span class="mdui-typo mdui-float-right">@Html.ActionLink("我要写短评", "Subject", "Comment", new { id = Model.ID }, null)</span>
+    </p>
+    <div class="mdui-divider"></div>
+    @if (Model.Comments.Count == 0)
+    {
+        <div style="width:100%; color:#DDD; text-align:center; padding:8px;">暂无评论</div>
+    }
+    <table style="width:100%; float:left;">
+        @foreach (var item in Model.Comments)
+        {
+        <tr>
+            <td style="width:40px;">
+                <div class="mdui-list-item-avatar">
+                    <img src="@(string.IsNullOrEmpty(item.Header) ? "/images/head.jpg" : item.Header)" />
+                </div>
+            </td>
+            <td valign="middle" class="mdui-typo" style="padding-left:5px;">
+                @Html.ActionLink(item.Nickname, "Details", "UserInfo", new { id = item.UserName }, null)<br />
+                <span class="rating" data-score="@item.Score"></span><span style="padding-left:5px; font-size:12px; color:grey;">@(item.Score * 2)分</span>
+            </td>
+            <td style="float:right; color:grey;" valign="middle">@item.Dated.ToString("yyyy/MM/dd HH:mm")</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="2" style="padding-left:5px;">@item.Comment</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td style="float:right;color:grey;display:table;">
+                <a style="color:grey;" href="javascript:void(0);" onclick="Praise(this,@item.ID)"><i class="mdui-icon material-icons" style="font-size:15px;">&#xe8dc;</i></a>
+                <span>@item.Praise</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="padding:10px 0px;"><div class="mdui-divider"></div></td>
+        </tr>
+        }
+    </table>
+    @if (Model.Comments.Count == 10)
+    {
+        <div class="mdui-typo" style="width:100%; text-align:center;">@Html.ActionLink("查看更多...", "Subject", "Comment", new { id = Model.ID }, null)</div>
+    }
+</div>

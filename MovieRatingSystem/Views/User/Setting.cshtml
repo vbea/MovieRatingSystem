@@ -1,0 +1,96 @@
+﻿@model MovieModel.Users
+@{
+    ViewBag.Title = "账号设置";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}@section head{
+<link href="/css/datetimepicker.min.css" rel="stylesheet" />
+<script src="/scripts/datetimepicker.js"></script>
+<script src="/scripts/datetimeres.js"></script>
+<script src="/scripts/jquery.cityselect.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#birthday').datetimepicker({
+            language:  'zh-CN',
+            format: 'yyyy-mm-dd',
+            weekStart: 0,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+        });
+        $("#city").citySelect({ nodata: "none", prov: "@ViewBag.Prov", city: "@ViewBag.City", dist: "@ViewBag.Dist" });
+        saved('@ViewBag.Status');
+    });
+    function saved(status) {
+        var msg = "";
+        switch (status) {
+            case 'OK':
+                msg = "修改成功";
+                break;
+            case 'NO':
+                msg = "修改失败";
+                break;
+        }
+        mdui.snackbar({ message: msg, timeout:1000 });
+    }
+</script>
+}
+@using (Html.BeginForm("Setting", "User", FormMethod.Post)) {
+@Html.HiddenFor(m=>m.ID)
+@Html.HiddenFor(m => m.UserName)
+@Html.HiddenFor(m=>m.Password)
+@Html.HiddenFor(m=>m.Header)
+<div class="mdui-card mdui-col-md-5" style="margin:20px auto; float:none; padding:8px 16px;">
+    <div class="mdui-textfield">
+        <label class="mdui-text-color-theme-accent">用户名</label>
+        <label class="mdui-col">@Model.UserName</label>
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-text-color-theme-accent">邮箱</label>
+        @Html.HiddenFor(m => m.Email)
+        <label class="mdui-col">@Model.Email</label>
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-text-color-theme-accent">用户组</label>
+        @Html.HiddenFor(m=>m.Roles)
+        <label class="mdui-col">@(Model.Roles==MovieBLL.UserBLL.Admin?"管理员":"普通用户")</label>
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-textfield-label">昵称</label>
+        <input name="Nickname" class="mdui-textfield-input" type="text" required="required" value="@Model.Nickname" />
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-textfield-label">生日</label>
+        <input id="birthday" name="Birthday" class="mdui-textfield-input" type="text" required="required" pattern="^(^(\d{4})(\-|\/|\.)\d{1,2}\3\d{1,2}$)|(^\d{4}-\d{1,2}-\d{1,2}$)$" value="@Model.Birthday" />
+    </div>
+    <div>
+        <label class="mdui-textfield-label">性别</label>
+        <label class="mdui-radio">
+            <input type="radio" name="Gender" value="False" @(Model.Gender?"":"checked")/>
+            <i class="mdui-radio-icon"></i>男
+        </label> &nbsp; &nbsp;
+        <label class="mdui-radio">
+            <input type="radio" name="Gender" value="True" @(Model.Gender?"checked":"")/>
+            <i class="mdui-radio-icon"></i>女
+        </label>
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-textfield-label">地址</label>
+        <div id="city" class="mdui-typo">
+            <select name="prov" class="prov"></select>
+            <select name="city" class="city" style="display:none;"></select>
+            <select name="dist" class="dist" style="display:none;"></select>
+        </div>
+    </div>
+    <div class="mdui-textfield">
+        <label class="mdui-textfield-label">个性签名：</label>
+        <textarea id="signmark" name="Remark" class="mdui-textfield-input">@Model.Remark</textarea>
+    </div>
+    <span class="mdui-textfield-error" style="visibility:visible;">@ViewBag.Message</span>
+    <p>
+        <button class="mdui-btn mdui-color-theme-accent mdui-ripple" type="submit">保存</button>
+    </p>
+</div>
+}

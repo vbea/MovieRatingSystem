@@ -1,0 +1,83 @@
+﻿@model IEnumerable<MovieModel.Users>
+@using Vbes.WebControls.Mvc
+@{
+    ViewBag.Title = "用户管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="mdui-table-fluid" style="margin:20px auto;">
+    <table class="mdui-table mdui-table-hoverable mdui-typo">
+        <thead>
+            <tr>
+                <th>用户名
+                </th>
+                <th>用户组
+                </th>
+                <th>邮箱
+                </th>
+                <th>性别
+                </th>
+                <th>昵称
+                </th>
+                <th>生日
+                </th>
+                <th>地址
+                </th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr style="white-space:nowrap;">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @(item.Roles==1?"管理员":"普通用户")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @(item.Gender?"女":"男")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nickname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Birthday)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td style="white-space:nowrap;" valign="middle">
+                        @Html.ActionLink("查看", "Index","UserInfo", new { id = item.ID }, null) &nbsp;
+                        @if (item.Roles != MovieBLL.UserBLL.Admin) {
+                        <a href="javascript:void(0);" onclick="deleteDialog(@item.ID)">删除</a>}
+                    </td>
+                </tr>
+            }
+    </table>
+    <div class="mdui-typo" style="padding:8px 16px;">
+    @Html.Pager((IPagedList)Model, new PagerOptions
+    {
+        PageIndexParameterName = "page",
+        ShowPageIndexBox = false,
+        ShowFirstLast = true,
+        ShowPrevNext = false
+    })
+    </div>
+</div>
+<button class="mdui-fab mdui-color-theme-accent mdui-ripple mdui-fab-fixed" onclick="javascript:location.href='/Sign'"><i class="mdui-icon material-icons">&#xe145;</i></button>
+<script type="text/javascript">
+    function deleteDialog(id) {
+        mdui.dialog({
+            title: '删除用户',
+            content: '您确定要删除吗？',
+            buttons: [{text: '取消'},{text: '删除',
+                  onClick: function (inst) {
+                      location.href='/User/Delete/'+id
+                  }
+              }]
+        });
+    }
+</script>

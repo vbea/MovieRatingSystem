@@ -1,0 +1,316 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MovieRatingModels.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeName" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Valid" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Movie">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Cover" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Director" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Writers" Type="varchar" MaxLength="50" />
+          <Property Name="Actor" Type="varchar" MaxLength="200" />
+          <Property Name="Types" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Area" Type="varchar" MaxLength="20" />
+          <Property Name="Languages" Type="varchar" MaxLength="20" />
+          <Property Name="Show" Type="varchar" MaxLength="10" />
+          <Property Name="Long" Type="varchar" MaxLength="10" />
+          <Property Name="Abstract" Type="text" />
+          <Property Name="Stills0" Type="varchar" MaxLength="100" />
+          <Property Name="Stills1" Type="varchar" MaxLength="100" />
+          <Property Name="Stills2" Type="varchar" MaxLength="100" />
+          <Property Name="Stills3" Type="varchar" MaxLength="100" />
+          <Property Name="Stills4" Type="varchar" MaxLength="100" />
+          <Property Name="Valid" Type="bit" Nullable="false" />
+          <Property Name="CreateOn" Type="datetime" />
+          <Property Name="CreateBy" Type="varchar" MaxLength="20" />
+          <Property Name="Averige" Type="decimal" Precision="10" Scale="1" />
+        </EntityType>
+        <EntityType Name="Poster">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="50" />
+          <Property Name="Picture" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Url" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Valid" Type="bit" Nullable="false" />
+          <Property Name="CreateOn" Type="datetime" />
+          <Property Name="CreateBy" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Rating">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Movie" Type="int" Nullable="false" />
+          <Property Name="Score" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="text" />
+          <Property Name="Praise" Type="int" Nullable="false" />
+          <Property Name="Dated" Type="datetime" Nullable="false" />
+          <Property Name="Users" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Roles" Type="int" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Gender" Type="bit" Nullable="false" />
+          <Property Name="Nickname" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Birthday" Type="varchar" MaxLength="10" />
+          <Property Name="Address" Type="varchar" MaxLength="20" />
+          <Property Name="Header" Type="varchar" MaxLength="100" />
+          <Property Name="Remark" Type="varchar(max)" />
+        </EntityType>
+        <Association Name="FK_Rating_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Rating" Type="Self.Rating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Rating">
+              <PropertyRef Name="Users" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MovieRatingModelsStoreContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Movie" EntityType="Self.Movie" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Poster" EntityType="Self.Poster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rating" EntityType="Self.Rating" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Rating_User" Association="Self.FK_Rating_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Rating" EntitySet="Rating" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MovieRatingModels" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MovieRatingModel" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Category" EntityType="MovieRatingModels.Category" />
+          <EntitySet Name="Poster" EntityType="MovieRatingModels.Poster" />
+          <EntitySet Name="Users" EntityType="MovieRatingModels.Users" />
+          <EntitySet Name="Rating" EntityType="MovieRatingModels.Rating" />
+          <AssociationSet Name="FK_Rating_User" Association="MovieRatingModels.FK_Rating_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Rating" EntitySet="Rating" />
+          </AssociationSet>
+          <EntitySet Name="Movie" EntityType="MovieRatingModels.Movie" />
+        </EntityContainer>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Valid" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Poster">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Picture" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Url" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Valid" Type="Boolean" Nullable="false" />
+          <Property Name="CreateOn" Type="DateTime" Precision="3" />
+          <Property Name="CreateBy" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Roles" Type="Int32" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Gender" Type="Boolean" Nullable="false" />
+          <Property Name="Nickname" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Birthday" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Header" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Rating" Relationship="MovieRatingModels.FK_Rating_User" FromRole="Users" ToRole="Rating" />
+        </EntityType>
+        <EntityType Name="Rating">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Movie" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Praise" Type="Int32" Nullable="false" />
+          <Property Name="Dated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Users" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserInfo" Relationship="MovieRatingModels.FK_Rating_User" FromRole="Rating" ToRole="Users" />
+        </EntityType>
+        <Association Name="FK_Rating_User">
+          <End Type="MovieRatingModels.Users" Role="Users" Multiplicity="1" />
+          <End Type="MovieRatingModels.Rating" Role="Rating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Rating">
+              <PropertyRef Name="Users" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Movie">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Cover" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Director" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Writers" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Actor" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Types" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Area" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Languages" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Show" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Long" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Abstract" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Stills0" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Stills1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Stills2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Stills3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Stills4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Valid" Type="Boolean" Nullable="false" />
+          <Property Name="CreateOn" Type="DateTime" Precision="3" />
+          <Property Name="CreateBy" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Averige" Type="Decimal" Precision="10" Scale="1" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MovieRatingModelsStoreContainer" CdmEntityContainer="MovieRatingModel">
+          <EntitySetMapping Name="Category">
+            <EntityTypeMapping TypeName="MovieRatingModels.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Valid" ColumnName="Valid" />
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Poster">
+            <EntityTypeMapping TypeName="MovieRatingModels.Poster">
+              <MappingFragment StoreEntitySet="Poster">
+                <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+                <ScalarProperty Name="CreateOn" ColumnName="CreateOn" />
+                <ScalarProperty Name="Valid" ColumnName="Valid" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="MovieRatingModels.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Header" ColumnName="Header" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+                <ScalarProperty Name="Nickname" ColumnName="Nickname" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Roles" ColumnName="Roles" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rating">
+            <EntityTypeMapping TypeName="MovieRatingModels.Rating">
+              <MappingFragment StoreEntitySet="Rating">
+                <ScalarProperty Name="Users" ColumnName="Users" />
+                <ScalarProperty Name="Dated" ColumnName="Dated" />
+                <ScalarProperty Name="Praise" ColumnName="Praise" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="Movie" ColumnName="Movie" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Movie">
+            <EntityTypeMapping TypeName="MovieRatingModels.Movie">
+              <MappingFragment StoreEntitySet="Movie">
+                <ScalarProperty Name="Averige" ColumnName="Averige" />
+                <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+                <ScalarProperty Name="CreateOn" ColumnName="CreateOn" />
+                <ScalarProperty Name="Valid" ColumnName="Valid" />
+                <ScalarProperty Name="Stills4" ColumnName="Stills4" />
+                <ScalarProperty Name="Stills3" ColumnName="Stills3" />
+                <ScalarProperty Name="Stills2" ColumnName="Stills2" />
+                <ScalarProperty Name="Stills1" ColumnName="Stills1" />
+                <ScalarProperty Name="Stills0" ColumnName="Stills0" />
+                <ScalarProperty Name="Abstract" ColumnName="Abstract" />
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Show" ColumnName="Show" />
+                <ScalarProperty Name="Languages" ColumnName="Languages" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Types" ColumnName="Types" />
+                <ScalarProperty Name="Actor" ColumnName="Actor" />
+                <ScalarProperty Name="Writers" ColumnName="Writers" />
+                <ScalarProperty Name="Director" ColumnName="Director" />
+                <ScalarProperty Name="Cover" ColumnName="Cover" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

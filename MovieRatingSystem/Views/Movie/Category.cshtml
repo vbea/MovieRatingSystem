@@ -1,0 +1,43 @@
+﻿@model IEnumerable<MovieModel.Category>
+@{
+    ViewBag.Title = "标签";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div style="padding:10px 0px 20px 0px;">
+    <div class="mdui-card" style="padding:8px 16px; margin:10px auto;">
+        <div class="mdui-typo">
+            <label class="mdui-textfield-input">类型</label>
+            @foreach (var item in Model)
+            {
+                <span style="margin:5px; display:inline-block;"><a href="#">@item.TypeName</a></span>
+            }
+        </div>
+    </div>
+    <div class="mdui-card" style="padding:8px 16px; margin:10px auto;">
+        <div class="mdui-typo">
+            <label class="mdui-textfield-input">年代</label>
+            @foreach (var item in ViewBag.Shows)
+            {
+                <span style="margin:5px; display:inline-block;"><a href="#">@item</a></span>
+            }
+        </div>
+    </div>
+    <div class="mdui-card" style="padding:8px 16px; margin:10px auto;">
+        <div class="mdui-typo">
+            <label class="mdui-textfield-input">国家/地区</label>
+            @foreach (var item in ViewBag.Areas)
+            {
+                <span style="margin:5px; display:inline-block;"><a href="#">@item</a></span>
+            }
+        </div>
+    </div>
+    <div class="mdui-card" style="padding:8px 16px;">
+        <div class="mdui-typo">
+            <label class="mdui-textfield-input">语言</label>
+            @foreach (var item in ViewBag.Lang)
+            {
+                <span style="margin:5px; display:inline-block;"><a href="#">@item</a></span>
+            }
+        </div>
+    </div>
+</div>

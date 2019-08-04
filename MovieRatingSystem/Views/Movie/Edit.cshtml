@@ -1,0 +1,298 @@
+﻿@model MovieModel.Movie
+@{
+    ViewBag.Title = "编辑电影";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <link href="/css/datetimepicker.min.css" rel="stylesheet" />
+    <script src="/scripts/datetimepicker.js"></script>
+    <script src="/scripts/datetimeres.js"></script>
+    <script type="text/javascript">
+    $(function () {
+        getEditInfo();
+        $('#Show').datetimepicker({
+            language: 'zh-CN',
+            format: 'yyyy-mm-dd',
+            weekStart: 0,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+        });
+        $("#cover").on("change", function () {
+            var file = this.files[0];
+            if (this.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#imgCover").show();
+                    $("#imgCover").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        $("#still0").on("change", function () {
+            var file = this.files[0];
+            if (this.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#del0").show();
+                    $("#imgStills0").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        $("#still1").on("change", function () {
+            var file = this.files[0];
+            if (this.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#del1").show();
+                    $("#imgStills1").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        $("#still2").on("change", function () {
+            var file = this.files[0];
+            if (this.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#del2").show();
+                    $("#imgStills2").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        $("#still3").on("change", function () {
+            var file = this.files[0];
+            if (this.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#del3").show();
+                    $("#imgStills3").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        $("#still4").on("change", function () {
+            var file = this.files[0];
+            if (this.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#del4").show();
+                    $("#imgStills4").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        $("#del0").click(function () {
+            $("#stills0").val("");
+            $("#imgStills0").attr("src", "/images/ic_add.jpg");
+            $(this).hide();
+            $("#Stills0").val("");
+        });
+        $("#del1").click(function () {
+            $("#stills1").val("");
+            $("#imgStills1").attr("src", "/images/ic_add.jpg");
+            $(this).hide();
+            $("#Stills1").val("");
+        });
+        $("#del2").click(function () {
+            $("#stills2").val("");
+            $("#imgStills2").attr("src", "/images/ic_add.jpg");
+            $(this).hide();
+            $("#Stills2").val("");
+        });
+        $("#del3").click(function () {
+            $("#stills3").val("");
+            $("#imgStills3").attr("src", "/images/ic_add.jpg");
+            $(this).hide();
+            $("#Stills3").val("");
+        });
+        $("#del4").click(function () {
+            $("#stills4").val("");
+            $("#imgStills4").attr("src", "/images/ic_add.jpg");
+            $(this).hide();
+            $("#Stills4").val("");
+        });
+        $('.Types').click(function () {
+            if ($(".Types:checked").length >= 4) {
+                $(this).prop("checked", false);
+                mdui.snackbar({ message: "最多只能选择3个分类!",timeout:2000 });
+            }
+        });
+    });
+    function getCheckBox() {
+        var checkAll = $(".Types:checked").map(function () {
+            return this.value;
+        });
+        var s = checkAll.get().join(",");
+        if (s.length > 0) {
+            $("#Types").val(s);
+            return true;
+        }
+        else
+        {
+            mdui.snackbar({ message: "你必须选择至少1个分类!", timeout: 2000 });
+            return false;
+        }
+    }
+    function getEditInfo()
+    {
+        var stil_1 = '@Model.Stills0';
+        var stil_2 = '@Model.Stills1';
+        var stil_3 = '@Model.Stills2';
+        var stil_4 = '@Model.Stills3';
+        var stil_5 = '@Model.Stills4';
+        var types = '@Model.Types'.split(',');
+        $(".Types").each(function () {
+            if ($.inArray($(this).val(), types) >= 0)
+                $(this).prop("checked", true);
+        });
+        if (stil_1.length > 0) {
+            $("#imgStills0").attr("src", stil_1);
+            $('#del0').show();
+        }
+        if (stil_2.length > 0) {
+            $("#imgStills1").attr("src", stil_2);
+            $('#del1').show();
+        }
+        if (stil_3.length > 0) {
+            $("#imgStills2").attr("src", stil_3);
+            $('#del2').show();
+        }
+        if (stil_4.length > 0) {
+            $("#imgStills3").attr("src", stil_4);
+            $('#del3').show();
+        }
+        if (stil_5.length > 0) {
+            $("#imgStills4").attr("src", stil_5);
+            $('#del4').show();
+        }
+    }
+    </script>
+    <style type="text/css">
+        .still {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .delete {
+            height: 24px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
+}
+@using (Html.BeginForm("Edit", "Movie", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="mdui-card mdui-col-md-5" style="margin:20px auto; padding:8px 16px;">
+        @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.Averige)
+        @Html.HiddenFor(model => model.Cover)
+        @Html.HiddenFor(model => model.Stills0)
+        @Html.HiddenFor(model => model.Stills1)
+        @Html.HiddenFor(model => model.Stills2)
+        @Html.HiddenFor(model => model.Stills3)
+        @Html.HiddenFor(model => model.Stills4)
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">电影名</label>
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "mdui-textfield-input", required = "required" } })
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">封面</label>
+            <input id="cover" type="file" name="covers" accept=".jpg,.png,.gif,.jpeg" style="display:none;" />
+            <img id="imgCover" src="@Model.Cover" onclick="javascript: covers.click()" style="cursor:pointer;"/>
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">导演</label>
+            @Html.EditorFor(model => model.Director, new { htmlAttributes = new { @class = "mdui-textfield-input", required = "required" } })
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">编剧</label>
+            @Html.EditorFor(model => model.Writers, new { htmlAttributes = new { @class = "mdui-textfield-input", maxLength="50" } })
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">主演</label>
+            @Html.EditorFor(model => model.Actor, new { htmlAttributes = new { @class = "mdui-textfield-input" } })
+        </div>
+        <div class="mdui-center">
+            <label class="mdui-textfield-label">分类</label>
+            @foreach (var item in ViewBag.Categorys)
+            {
+                <label class="mdui-checkbox" style="margin:0px 10px;">
+                    <input type="checkbox" class="Types" value="@item.ID" />
+                    <i class="mdui-checkbox-icon"></i>@item.TypeName
+                </label>
+            }
+            @Html.HiddenFor(model=>model.Types)
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">国家/地区</label>
+            @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "mdui-textfield-input" } })
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">语言</label>
+            @Html.EditorFor(model => model.Languages, new { htmlAttributes = new { @class = "mdui-textfield-input" } })
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">上映日期</label>
+            @Html.EditorFor(model => model.Show, new { htmlAttributes = new { @class = "mdui-textfield-input", pattern = @"^(^(\d{4})(\-|\/|\.)\d{1,2}\3\d{1,2}$)|(^\d{4}-\d{1,2}-\d{1,2}$)$" } })
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">片长（分钟）</label>
+            @Html.EditorFor(model => model.Long, new { htmlAttributes = new { @class = "mdui-textfield-input" } })
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">简介</label>
+            @Html.TextAreaFor(model => model.Abstract, new { @class = "mdui-textfield-input" })
+        </div>
+        <div class="mdui-textfield mdui-center">
+            <label class="mdui-textfield-label">剧照</label>
+            <div class="still">
+                <img id="imgStills0" src="/images/ic_add.jpg" style="cursor:pointer;" onclick="javascript: still0.click()" />
+                <i id="del0" class="mdui-icon material-icons delete mdui-text-color-theme-accent" mdui-tooltip="{content: '删除'}">&#xe872;</i>
+                <input id="still0" type="file" name="still0" accept=".jpg,.png,.gif,.jpeg" style="display:none;" />
+            </div>
+            <div class="still">
+                <img id="imgStills1" src="/images/ic_add.jpg" style="cursor:pointer;" onclick="javascript: still1.click()" />
+                <i id="del1" class="mdui-icon material-icons delete mdui-text-color-theme-accent" mdui-tooltip="{content: '删除'}">&#xe872;</i>
+                <input id="still1" type="file" name="still1" accept=".jpg,.png,.gif,.jpeg" style="display:none;" />
+            </div>
+            <div class="still">
+                <img id="imgStills2" src="/images/ic_add.jpg" style="cursor:pointer;" onclick="javascript: still2.click()" />
+                <i id="del2" class="mdui-icon material-icons delete mdui-text-color-theme-accent" mdui-tooltip="{content: '删除'}">&#xe872;</i>
+                <input id="still2" type="file" name="still2" accept=".jpg,.png,.gif,.jpeg" style="display:none;" />
+            </div>
+            <div class="still">
+                <img id="imgStills3" src="/images/ic_add.jpg" style="cursor:pointer;" onclick="javascript: still3.click()" />
+                <i id="del3" class="mdui-icon material-icons delete mdui-text-color-theme-accent" mdui-tooltip="{content: '删除'}">&#xe872;</i>
+                <input id="still3" type="file" name="still3" accept=".jpg,.png,.gif,.jpeg" style="display:none;" />
+            </div>
+            <div class="still">
+                <img id="imgStills4" src="/images/ic_add.jpg" style="cursor:pointer;" onclick="javascript: still4.click()" />
+                <i id="del4" class="mdui-icon material-icons delete mdui-text-color-theme-accent" mdui-tooltip="{content: '删除'}">&#xe872;</i>
+                <input id="still4" type="file" name="still4" accept=".jpg,.png,.gif,.jpeg" style="display:none;" />
+            </div>
+        </div>
+        <div class="mdui-list">
+            <label class="mdui-list-item mdui-ripple">
+                <span class="mdui-list-item-content">启用</span>
+                <label class="mdui-switch">
+                    <input type="checkbox" name="Valid" value="true" @(Model.Valid ? "checked" : "")/>
+                    <i class="mdui-switch-icon"></i>
+                </label>
+            </label>
+        </div>
+        <span class="mdui-textfield-error" style="visibility:visible;">@ViewBag.Message</span>
+        <p>
+            <button type="submit" class="mdui-btn mdui-color-theme-accent mdui-ripple" onclick="return getCheckBox()">保存</button>
+            <button type="button" class="mdui-btn mdui-color-theme-accent mdui-ripple" onclick="javascript: location.href='/Movie';">取消</button>
+        </p>
+    </div>
+}

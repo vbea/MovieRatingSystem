@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "头像设置";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}@section head{
+    <link href="/css/Jcrop.min.css" rel="stylesheet" />
+    <script src="/scripts/Jcrop.min.js"></script>
+    <script type="text/javascript">
+        function showCoords(c) {
+            jQuery('#x').val(Math.round(c.x));
+            jQuery('#y').val(Math.round(c.y));
+            jQuery('#w').val(Math.round(c.w));
+            jQuery('#h').val(Math.round(c.h));
+            $('#saveimg').show();
+        };
+        $(function () {
+            $('#imgPort').Jcrop({
+                minSize:[100,100],
+                maxSize: [500, 500],
+                aspectRatio: 1,
+                boxWidth: $('#imgPort').width(),
+                boxHeight: $('#imgPort').height(),
+                onChange: showCoords,
+                onSelect: showCoords,
+                onRelease: function () {
+                    $('#saveimg').hide();
+                },
+                setSelect:[0,0,100,100]
+            });
+        });
+    </script>
+}
+<div class="container">
+<p>头像设置</p>
+<img src="@ViewData["imgresouce"]" id="imgPort" style="@ViewData["imagestyle"]"/>
+    @using (Html.BeginForm("Header", "User", FormMethod.Post)) { 
+    <input type="hidden" id="x" name="x" />
+    <input type="hidden" id="y" name="y" />
+    <input type="hidden" id="w" name="w" />
+    <input type="hidden" id="h" name="h" />
+    <button id="saveimg" type="submit" class="mdui-btn mdui-color-theme-accent mdui-ripple" style="width:100px; display:none; margin:15px 0px 20px 10px;">裁剪并保存</button>
+    }
+</div>

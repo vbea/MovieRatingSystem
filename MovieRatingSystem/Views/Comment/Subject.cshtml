@@ -1,0 +1,134 @@
+﻿@model MovieRatingSystem.Models.CommentModel
+@using Vbes.WebControls.Mvc
+@{
+    ViewBag.Title = Model.Name+"的影评";  
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+<link href="/css/jquery.raty.css" rel="stylesheet" />
+<script src="/scripts/jquery.raty.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#rating').raty({
+            starOff : '/images/starky.png',
+            starOn: '/images/starsy.png',
+            starHalf: '/images/starsf.png',
+            hints: ['烂片', '较差', '还行', '推荐', '力荐'],
+            target: '#hint',
+            targetKeep: true,
+            targetScore: '#target',
+            number: 5
+        });
+        $('.rating').raty({
+            readOnly: true,
+            score: function () {
+                return $(this).attr('data-score');
+            }
+        });
+    });
+    function check()
+    {
+        if (!$('#target').val())
+        {
+            mdui.snackbar({ message: "请打分!", timeout: 2000 });
+            return false;
+        }
+        return true;
+    }
+    function Praise(obj, id) {
+        var count = $(obj).next();
+        $.get("/Comment/Praise", { id: id, date: new Date() }, function (result) {
+            if (result == '-1')
+                location.href = '/Login';
+            else {
+                count.text(result);
+                $(obj).attr("onclick", "");
+                $(obj).addClass("mdui-text-color-theme-accent");
+            }
+        });
+    }
+</script>
+<style type="text/css">
+    .ldiv{
+        float:left;
+        vertical-align:middle;
+        padding-left:2px;
+        line-height:21px;
+    }
+    .rdiv {
+        color:black;
+        font-size:15pt;
+        padding-left:2px;
+    }
+</style>
+}
+<div class="mdui-card" style="margin:20px auto; padding:0px 16px;">
+@using (Html.BeginForm("Subject", "Comment",new { id=Model.ID }, FormMethod.Post, null))
+{
+    <h3 class="mdui-typo" style="text-align:center;">@(Html.ActionLink(Model.Name, "Details", "Movie", new { id = Model.ID }, null))的影评</h3>
+    <div>
+        <div class="ldiv">评分：</div>
+        <div id="rating" class="ldiv"></div>
+        <div id="hint" class="ldiv"></div>
+        <input type="hidden" name="Score" id="target" />
+    </div>
+    <div class="mdui-textfield" style="width:100%;">
+        <label class="mdui-textfield-label rdiv">简评：</label>
+        <textarea name="Comment" class="mdui-textfield-input" required="required" maxlength="200"></textarea>
+    </div>
+    <div style="padding-bottom:10px;text-align:right; width:100%;">
+        <button type="submit" class="mdui-btn mdui-color-theme-accent mdui-ripple" onclick="return check()">提交</button>
+    </div>
+}
+    <p class="mdui-text-color-theme-accent">全部评论</p>
+    <div class="mdui-divider"></div>
+    @if (Model.Comments.Count == 0)
+    {
+        <div style="width:100%; color:#DDD; text-align:center; padding:8px;">暂无评论</div>
+    }
+    <div>
+        <table style="width:100%; float:left;">
+            @foreach (var item in Model.Comments)
+            {
+                <tr>
+                    <td style="width:40px;">
+                        <div class="mdui-list-item-avatar">
+                            <img src="@(string.IsNullOrEmpty(item.Header) ? "/images/head.jpg" : item.Header)" />
+                        </div>
+                    </td>
+                    <td valign="middle" class="mdui-typo" style="padding-left:5px;">
+                        @Html.ActionLink(item.Nickname, "Details", "UserInfo", new { id = item.UserName }, null)<br />
+                        <span class="rating" data-score="@item.Score"></span><span style="padding-left:5px; font-size:12px; color:grey;">@(item.Score * 2)分</span>
+                    </td>
+                    <td style="float:right; color:grey;" valign="middle">@item.Dated.ToString("yyyy/MM/dd HH:mm")</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2" style="padding-left:5px;">@item.Comment</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td style="float:right;color:grey;display:table;">
+                        <a style="color:grey;" href="javascript:void(0);" onclick="Praise(this,@item.ID)"><i class="mdui-icon material-icons" style="font-size:15px;">&#xe8dc;</i></a>
+                        <span>@item.Praise</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding:10px 0px;"><div class="mdui-divider"></div></td>
+                </tr>
+            }
+        </table>
+        <div class="mdui-typo" style="padding:8px 16px;text-align:center;">
+            @Html.Pager((IPagedList)Model.Comments, new PagerOptions
+           {
+               PageIndexParameterName = "page",
+               ShowPageIndexBox = false,
+               ShowFirstLast = true,
+               ShowPrevNext = false
+           })
+        </div>
+    </div>
+</div>
+
+

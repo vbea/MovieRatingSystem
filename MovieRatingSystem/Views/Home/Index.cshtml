@@ -1,0 +1,68 @@
+﻿@model MovieRatingSystem.Models.MovieViewModel
+@{
+    ViewBag.Title = "首页";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <link href="/css/responsiveslides.css" rel="stylesheet" />
+    <link href="/css/jquery.raty.css" rel="stylesheet" />
+    <script src="/scripts/responsiveslides.min.js"></script>
+    <script src="/scripts/jquery.raty.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#posters").responsiveSlides({
+                auto: true,
+                speed: 500
+            });
+            $('.rating').raty({
+                readOnly: true,
+                score: function () {
+                    return $(this).attr('data-score');
+                }
+            });
+        });
+    </script>
+}
+<div class="mdui-card" style="margin:20px auto;">
+    @if (Model.Posters != null && Model.Posters.Count > 0)
+    {
+        <div class="mdui-col-md-8 mdui-p-a-0">
+            <ul id="posters" class="posters">
+                @foreach (var item in Model.Posters){
+                <li>
+                    <a href="@item.Url" title="@item.Title"><img src="@item.Picture" style="max-height:300px;"/></a>
+                </li>
+                }
+            </ul>
+        </div>
+    }
+    <div style="padding-top:15px;">
+        <label class="mdui-text-color-theme-accent mdui-typo" style="margin:8px;">热门排行榜Top 5&nbsp;<a href="/Movie/Ranking">更多>></a></label>
+        <ul class="mdui-list">@{
+            int count = Model.Movies.Count;
+            if (count > 5) {
+                count = 5; }
+            for (int i = 0; i < count; i++) {
+            <li class="mdui-list-item mdui-ripple">
+                <a href="@Html.Raw("/Movie/Details/" + Model.Movies[i].ID)" style="width:100%;">@Model.Movies[i].Name</a>
+                <span style="color:grey;">@Model.Movies[i].Averige</span>
+            </li>
+            }}
+        </ul>
+    </div>
+</div>
+<div class="mdui-row-xs-3 mdui-row-sm-4 mdui-row-md-5 mdui-row-lg-6 mdui-row-xl-7 mdui-grid-list" style="margin:20px auto;">
+@foreach (var item in Model.Movies) {
+    <div class="mdui-col mdui-card" style="text-align:center; margin:4px auto;">
+        <div class="mdui-grid-tile mdui-typo">
+            <a href="@Html.Raw("/Movie/Details/" + item.ID)">
+                <img src="@item.Cover" />
+            </a>
+            <a href="@Html.Raw("/Movie/Details/" + item.ID)">@item.Name</a>
+        </div>
+        <div>
+            <span class="rating" data-score="@(item.Averige / 2)"></span>@item.Averige 分
+        </div>
+    </div>
+}
+</div>

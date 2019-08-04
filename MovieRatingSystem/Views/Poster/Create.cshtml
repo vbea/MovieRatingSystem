@@ -1,0 +1,56 @@
+﻿@model MovieModel.Poster
+
+@{
+    ViewBag.Title = "新增海报";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+<script type="text/javascript">
+    $(function () {
+        $("#myFile").on("change", function () {
+            var file = this.files[0];
+            if (this.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#imgProd").show();
+                    $("#imgProd").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>    
+}
+@using (Html.BeginForm("Create", "Poster", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="mdui-card mdui-col-md-5" style="margin:20px auto; padding:8px 16px;">
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">标题</label>
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "mdui-textfield-input" } })
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">海报</label>
+            <input id="myFile" type="file" name="picture" accept=".jpg,.png,.gif,.jpeg" class="mdui-textfield-input" required="required" style="opacity:0;"/>
+            <div class="mdui-divider"></div>
+            <img id="imgProd" style="width:100%; display:none;"/>
+        </div>
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">链接</label>
+            @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "mdui-textfield-input", required = "required" } })
+        </div>
+        <div class="mdui-list">
+            <label class="mdui-list-item mdui-ripple">
+                <span class="mdui-list-item-content">启用</span>
+                <label class="mdui-switch">
+                    <input type="checkbox" name="Valid" value="true" />
+                    <i class="mdui-switch-icon"></i>
+                </label>
+            </label>
+        </div>
+        <span class="mdui-textfield-error" style="visibility:visible;">@ViewBag.Message</span>
+        <p>
+            <button type="submit" class="mdui-btn mdui-color-theme-accent mdui-ripple">保存</button>
+            <button type="button" class="mdui-btn mdui-color-theme-accent mdui-ripple" onclick="javascript: location.href='/Poster';">取消</button>
+        </p>
+    </div>
+}
